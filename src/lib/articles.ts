@@ -1,6 +1,7 @@
 // Zenn と Qiita の記事一覧をビルド時に取得し、公開日の新しい順にマージして返す。
-// どちらも公開 API（認証不要）を fetch する。失敗してもビルドは止めず、空配列にフォールバックする。
+// 取得に失敗したサービスは、コミット済みのキャッシュにフォールバックする。
 import { ZENN_USERNAME, QIITA_USERNAME } from "@/config";
+import articlesCache from "@/data/articles-cache.json";
 
 export type ArticleSource = "zenn" | "qiita";
 
@@ -20,7 +21,16 @@ export interface Article {
   likedCount: number;
 }
 
-const COMMON_HEADERS = { "User-Agent": "portfolio-build" };
+const COMMON_HEADERS = {
+  Accept: "application/json",
+  "User-Agent": "portfolio-build",
+};
+
+function getCachedArticles(source: ArticleSource): Article[] {
+  return (articlesCache as Article[]).filter(
+    (article) => article.source === source,
+  );
+}
 
 // --- Zenn -------------------------------------------------------------------
 interface ZennArticle {
@@ -52,7 +62,9 @@ async function getZennArticles(): Promise<Article[]> {
     }));
   } catch (e) {
     console.warn("[articles] Zenn フィードの取得に失敗しました:", e);
-    return [];
+    const cached = getCachedArticles("zenn");
+    console.warn(`[articles] Zenn キャッシュを使用します: ${cached.length}件`);
+    return cached;
   }
 }
 
@@ -64,6 +76,46 @@ interface QiitaItem {
   created_at: string;
   likes_count: number;
   tags: { name: string }[];
+}
+
+function decodeXml(value: string) {
+  return value
+    .replaceAll("&amp;", "&")
+    .replaceAll("&lt;", "<")
+    .replaceAll("&gt;", ">")
+    .replaceAll("&quot;", '"')
+    .replaceAll("&#39;", "'");
+}
+
+function getText(block: string, tag: string) {
+  const match = block.match(new RegExp(`<${tag}[^>]*>([\\s\\S]*?)</${tag}>`));
+  return match ? decodeXml(match[1].trim()) : "";
+}
+
+async function getQiitaFeedArticles(): Promise<Article[]> {
+  const res = await fetch(`https://qiita.com/${QIITA_USERNAME}/feed.atom`, {
+    headers: COMMON_HEADERS,
+  });
+  if (!res.ok) throw new Error(`Qiita feed responded ${res.status}`);
+
+  const xml = await res.text();
+  const entries = xml.match(/<entry>[\s\S]*?<\/entry>/g) ?? [];
+  return entries.map((entry) => {
+    const url =
+      entry.match(/<link[^>]+rel="alternate"[^>]+href="([^"]+)"/)?.[1] ??
+      getText(entry, "url");
+    const id = url.split("/").filter(Boolean).at(-1) ?? getText(entry, "id");
+
+    return {
+      id: `qiita-${id}`,
+      source: "qiita" as const,
+      title: getText(entry, "title"),
+      tags: [],
+      url,
+      publishedAt: getText(entry, "published") || getText(entry, "updated"),
+      likedCount: 0,
+    };
+  });
 }
 
 async function getQiitaArticles(): Promise<Article[]> {
@@ -85,8 +137,15 @@ async function getQiitaArticles(): Promise<Article[]> {
       likedCount: it.likes_count,
     }));
   } catch (e) {
-    console.warn("[articles] Qiita フィードの取得に失敗しました:", e);
-    return [];
+    console.warn("[articles] Qiita API の取得に失敗しました:", e);
+    try {
+      return await getQiitaFeedArticles();
+    } catch (feedError) {
+      console.warn("[articles] Qiita feed の取得に失敗しました:", feedError);
+    }
+    const cached = getCachedArticles("qiita");
+    console.warn(`[articles] Qiita キャッシュを使用します: ${cached.length}件`);
+    return cached;
   }
 }
 

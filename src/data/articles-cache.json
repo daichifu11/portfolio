@@ -1,0 +1,79 @@
+[
+  {
+    "id": "zenn-486059",
+    "source": "zenn",
+    "title": "Google Play デベロッパー アカウントが停止されてから復旧するまでにやったこと",
+    "emoji": "😱",
+    "url": "https://zenn.dev/daaaichifu/articles/291f0517a3c215",
+    "publishedAt": "2025-11-24T23:35:58.691+09:00",
+    "likedCount": 2
+  },
+  {
+    "id": "qiita-778a9505c9bd6e561ca4",
+    "source": "qiita",
+    "title": "【PHP】【メモ】文字列連結の「.」「,」の違い",
+    "tags": [
+      "PHP"
+    ],
+    "url": "https://qiita.com/daichifu11/items/778a9505c9bd6e561ca4",
+    "publishedAt": "2021-10-03T19:11:25+09:00",
+    "likedCount": 0
+  },
+  {
+    "id": "qiita-42b07834c290eb95bb5b",
+    "source": "qiita",
+    "title": "【PHP】エルビス演算子",
+    "tags": [
+      "PHP"
+    ],
+    "url": "https://qiita.com/daichifu11/items/42b07834c290eb95bb5b",
+    "publishedAt": "2021-10-03T19:04:11+09:00",
+    "likedCount": 1
+  },
+  {
+    "id": "qiita-bd74952f11b72f5a4271",
+    "source": "qiita",
+    "title": "【PHP】「::class」ってなにしてるの？",
+    "tags": [
+      "PHP"
+    ],
+    "url": "https://qiita.com/daichifu11/items/bd74952f11b72f5a4271",
+    "publishedAt": "2021-08-21T19:39:05+09:00",
+    "likedCount": 0
+  },
+  {
+    "id": "qiita-8ad17039e0479a4d3205",
+    "source": "qiita",
+    "title": "【Linux】はじめてのパーミッション",
+    "tags": [
+      "Linux"
+    ],
+    "url": "https://qiita.com/daichifu11/items/8ad17039e0479a4d3205",
+    "publishedAt": "2021-08-21T00:59:34+09:00",
+    "likedCount": 1
+  },
+  {
+    "id": "qiita-1c009b01da2c36b34df2",
+    "source": "qiita",
+    "title": "【Laravel】でトランザクションをはる方法",
+    "tags": [
+      "PHP",
+      "Laravel"
+    ],
+    "url": "https://qiita.com/daichifu11/items/1c009b01da2c36b34df2",
+    "publishedAt": "2021-08-18T00:37:11+09:00",
+    "likedCount": 1
+  },
+  {
+    "id": "qiita-e4cbbb986e51a8f7cace",
+    "source": "qiita",
+    "title": "【Laravel】LaravelのN+1問題とは、その解決方法",
+    "tags": [
+      "PHP",
+      "Laravel"
+    ],
+    "url": "https://qiita.com/daichifu11/items/e4cbbb986e51a8f7cace",
+    "publishedAt": "2021-08-03T01:06:34+09:00",
+    "likedCount": 9
+  }
+]

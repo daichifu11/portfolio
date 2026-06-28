@@ -10,6 +10,7 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "refresh:articles": "node scripts/refresh-articles-cache.mjs",
     "astro": "astro"
   },
   "dependencies": {
