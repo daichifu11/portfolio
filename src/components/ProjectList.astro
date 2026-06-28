@@ -1,0 +1,56 @@
+---
+import type { Project } from "@/lib/projects";
+import { url } from "@/lib/url";
+
+interface Props {
+  items: Project[];
+}
+const { items } = Astro.props;
+---
+
+<ul>
+  {
+    items.map((p, i) => (
+      <li>
+        <a
+          href={url(`/works/${p.slug}`)}
+          class="group flex items-center gap-4 border-b border-border py-5 transition-colors hover:border-foreground/40 sm:gap-5"
+        >
+          <div class="flex h-14 w-20 shrink-0 items-center justify-center overflow-hidden rounded-md border border-border bg-muted">
+            {p.thumbnail ? (
+              <img
+                src={url(p.thumbnail)}
+                alt={p.title}
+                loading="lazy"
+                decoding="async"
+                class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+              />
+            ) : (
+              <span class="text-sm tabular-nums text-muted-foreground/70">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+            )}
+          </div>
+
+          <div class="min-w-0 flex-1 space-y-1">
+            <div class="flex flex-wrap items-center gap-2.5">
+              <h3 class="font-medium tracking-tight">{p.title}</h3>
+              {p.isNew && (
+                <span class="inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.12em] text-foreground">
+                  <span class="h-1.5 w-1.5 rounded-full bg-foreground" />
+                  New
+                </span>
+              )}
+            </div>
+            <p class="line-clamp-2 text-sm leading-relaxed text-muted-foreground">{p.summary}</p>
+          </div>
+
+          <div class="flex shrink-0 items-center gap-4 text-sm text-muted-foreground">
+            <span class="hidden tabular-nums sm:inline">{p.year}</span>
+            <span class="transition-transform duration-200 group-hover:translate-x-0.5">→</span>
+          </div>
+        </a>
+      </li>
+    ))
+  }
+</ul>

@@ -1,0 +1,61 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Section from "@/components/Section.astro";
+import ProjectList from "@/components/ProjectList.astro";
+import ArticleList from "@/components/ArticleList.astro";
+import SocialLinks from "@/components/SocialLinks.astro";
+import { projects } from "@/lib/projects";
+import { getArticles } from "@/lib/articles";
+import { NAME } from "@/config";
+import { url } from "@/lib/url";
+
+const latestArticles = (await getArticles()).slice(0, 3);
+---
+
+<BaseLayout activeId="home">
+  <div class="space-y-14 md:space-y-20">
+    <Section divider={false} class="md:pt-2">
+      <div class="max-w-2xl space-y-6">
+        <h1 class="text-4xl font-semibold leading-[1.15] tracking-tight sm:text-5xl">
+          Hello👋
+        </h1>
+        <p class="text-lg leading-relaxed text-muted-foreground">
+          ソフトウェアエンジニアの {NAME} です。ものづくりが好きです。
+        </p>
+        <SocialLinks class="pt-1" />
+      </div>
+    </Section>
+
+    <Section label="Works">
+      <h2 class="sr-only">Works</h2>
+      <ProjectList items={projects} />
+      <div class="pt-6">
+        <a
+          href={url("/works")}
+          class="group inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
+        >
+          All
+          <span class="transition-transform duration-200 group-hover:translate-x-0.5">→</span>
+        </a>
+      </div>
+    </Section>
+
+    {
+      latestArticles.length > 0 && (
+        <Section label="Articles">
+          <h2 class="sr-only">Articles</h2>
+          <ArticleList items={latestArticles} />
+          <div class="pt-6">
+            <a
+              href={url("/articles")}
+              class="group inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
+            >
+              All
+              <span class="transition-transform duration-200 group-hover:translate-x-0.5">→</span>
+            </a>
+          </div>
+        </Section>
+      )
+    }
+  </div>
+</BaseLayout>

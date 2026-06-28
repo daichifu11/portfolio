@@ -1,0 +1,17 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { buttonVariants } from "@/components/ui/button";
+import { url } from "@/lib/url";
+---
+
+<BaseLayout title="404">
+  <div class="flex min-h-[50vh] flex-col items-center justify-center text-center">
+    <p class="text-7xl font-bold tracking-tight">404</p>
+    <p class="mt-4 text-lg text-muted-foreground">
+      お探しのページは見つかりませんでした。
+    </p>
+    <a href={url("/")} class={buttonVariants({ variant: "default", className: "mt-8" })}>
+      Home
+    </a>
+  </div>
+</BaseLayout>

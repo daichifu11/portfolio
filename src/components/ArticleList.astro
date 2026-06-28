@@ -1,0 +1,68 @@
+---
+import type { Article } from "@/lib/articles";
+
+interface Props {
+  items: Article[];
+}
+const { items } = Astro.props;
+
+const fmtDate = (iso: string) => {
+  const d = new Date(iso);
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${d.getFullYear()}.${m}.${day}`;
+};
+
+const sourceLabel: Record<Article["source"], string> = {
+  zenn: "Zenn",
+  qiita: "Qiita",
+};
+---
+
+{
+  items.length === 0 ? (
+    <p class="py-5 text-sm text-muted-foreground">記事はまだありません。</p>
+  ) : (
+    <ul>
+      {items.map((a) => (
+        <li>
+          <a
+            href={a.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="group flex items-center gap-4 border-b border-border py-5 transition-colors hover:border-foreground/40 sm:gap-5"
+          >
+            <div class="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-md border border-border bg-muted">
+              {a.source === "zenn" ? (
+                <span aria-hidden="true" class="text-2xl">
+                  {a.emoji}
+                </span>
+              ) : (
+                <span aria-hidden="true" class="text-lg font-bold text-[#55C500]">
+                  Q
+                </span>
+              )}
+            </div>
+
+            <div class="min-w-0 flex-1 space-y-1">
+              <h3 class="line-clamp-2 font-medium tracking-tight">{a.title}</h3>
+              <p class="flex flex-wrap items-center gap-x-2 text-sm text-muted-foreground">
+                <span>{sourceLabel[a.source]}</span>
+                {a.tags && a.tags.length > 0 && (
+                  <span class="text-muted-foreground/70">
+                    · {a.tags.slice(0, 3).join(" / ")}
+                  </span>
+                )}
+              </p>
+            </div>
+
+            <div class="flex shrink-0 items-center gap-4 text-sm text-muted-foreground">
+              <span class="hidden tabular-nums sm:inline">{fmtDate(a.publishedAt)}</span>
+              <span class="transition-transform duration-200 group-hover:translate-x-0.5">↗</span>
+            </div>
+          </a>
+        </li>
+      ))}
+    </ul>
+  )
+}

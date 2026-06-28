@@ -1,0 +1,29 @@
+---
+// エディトリアルな「左マージン（ラベル溝）＋本文」の非対称グリッド。
+// label を右寄せの小さなトラッキング付きラベルとして余白に置く。
+interface Props {
+  label?: string;
+  divider?: boolean;
+  class?: string;
+}
+const { label, divider = true, class: className = "" } = Astro.props;
+---
+
+<section
+  class:list={[
+    "grid gap-x-10 gap-y-5 md:grid-cols-[7rem_1fr] md:gap-y-0",
+    divider && "border-t border-border pt-10 md:pt-14",
+    className,
+  ]}
+>
+  {
+    label !== undefined && (
+      <div class="md:pt-1 md:text-right">
+        <span class="text-xs font-medium text-muted-foreground">
+          {label}
+        </span>
+      </div>
+    )
+  }
+  <div class="min-w-0 md:col-start-2"><slot /></div>
+</section>

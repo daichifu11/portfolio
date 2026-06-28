@@ -1,0 +1,99 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Section from "@/components/Section.astro";
+import { projects, type Project } from "@/lib/projects";
+import { url } from "@/lib/url";
+
+export function getStaticPaths() {
+  return projects.map((p) => ({ params: { slug: p.slug }, props: { project: p } }));
+}
+
+interface Props {
+  project: Project;
+}
+const { project } = Astro.props;
+const { title, summary, year, isNew, cover, description = [], images = [], links = [] } = project;
+const isExternal = (href: string) => href.startsWith("http");
+---
+
+<BaseLayout title={title} activeId="works">
+  <div class="space-y-12 md:space-y-16">
+    <a
+      href={url("/works")}
+      class="group inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
+    >
+      <span class="transition-transform duration-200 group-hover:-translate-x-0.5">←</span>
+      Works
+    </a>
+
+    <Section label={year} divider={false} class="md:pt-1">
+      <div class="max-w-2xl space-y-4">
+        <div class="flex flex-wrap items-center gap-3">
+          <h1 class="text-3xl font-semibold tracking-tight sm:text-4xl">{title}</h1>
+          {
+            isNew && (
+              <span class="inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.12em] text-foreground">
+                <span class="h-1.5 w-1.5 rounded-full bg-foreground" />
+                New
+              </span>
+            )
+          }
+        </div>
+        <p class="text-lg leading-relaxed text-muted-foreground">{summary}</p>
+        {
+          links.length > 0 && (
+            <div class="flex flex-wrap items-center gap-x-6 gap-y-2 pt-1 text-sm">
+              {links.map((l) => (
+                <a
+                  href={l.href}
+                  target={isExternal(l.href) ? "_blank" : undefined}
+                  rel={isExternal(l.href) ? "noopener noreferrer" : undefined}
+                  class="group inline-flex items-center gap-1 text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  {l.label}
+                  <span class="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+                    ↗
+                  </span>
+                </a>
+              ))}
+            </div>
+          )
+        }
+      </div>
+    </Section>
+
+    {
+      cover && (
+        <figure class="overflow-hidden rounded-lg border border-border">
+          <img src={url(cover)} alt={title} class="w-full" />
+        </figure>
+      )
+    }
+
+    {
+      description.length > 0 && (
+        <Section label="About">
+          <div class="max-w-2xl space-y-4 leading-relaxed text-muted-foreground">
+            {description.map((par) => (
+              <p>{par}</p>
+            ))}
+          </div>
+        </Section>
+      )
+    }
+
+    {
+      images.length > 0 && (
+        <Section label="Images">
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6">
+            {images.map((src) => (
+              <figure class="overflow-hidden rounded-lg border border-border">
+                <img src={url(src)} alt={title} loading="lazy" decoding="async" class="w-full" />
+              </figure>
+            ))}
+          </div>
+        </Section>
+      )
+    }
+  </div>
+</BaseLayout>

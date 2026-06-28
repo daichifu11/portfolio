@@ -1,0 +1,20 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Section from "@/components/Section.astro";
+import ProjectList from "@/components/ProjectList.astro";
+import { projects } from "@/lib/projects";
+---
+
+<BaseLayout title="Works" activeId="works">
+  <div class="space-y-14 md:space-y-20">
+    <Section divider={false} class="md:pt-2">
+      <div class="max-w-2xl space-y-4">
+        <h1 class="text-3xl font-semibold tracking-tight sm:text-4xl">Works</h1>
+      </div>
+    </Section>
+
+    <Section>
+      <ProjectList items={projects} />
+    </Section>
+  </div>
+</BaseLayout>

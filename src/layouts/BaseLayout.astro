@@ -1,0 +1,45 @@
+---
+import BaseHead from "@/components/BaseHead.astro";
+import Header from "@/components/Header.astro";
+import SocialLinks from "@/components/SocialLinks.astro";
+import { SITE_TITLE, SITE_DESCRIPTION, NAME } from "@/config";
+
+const {
+  title = SITE_TITLE,
+  description = SITE_DESCRIPTION,
+  image,
+  activeId,
+} = Astro.props;
+
+const pageTitle = title === SITE_TITLE ? SITE_TITLE : `${title} | ${NAME}`;
+---
+
+<!doctype html>
+<html lang="ja" class="dark">
+  <head>
+    <BaseHead title={pageTitle} description={description} image={image} />
+    <script is:inline>
+      // 旧キー(theme)の保存値は破棄し、ダークを既定にする
+      try {
+        localStorage.removeItem("theme");
+      } catch (e) {}
+      const stored = localStorage.getItem("color-mode");
+      const dark = stored ? stored === "dark" : true;
+      document.documentElement.classList.toggle("dark", dark);
+    </script>
+  </head>
+  <body class="flex min-h-screen flex-col bg-background text-foreground antialiased">
+    <Header activeId={activeId} />
+    <main class="mx-auto w-full max-w-4xl flex-1 px-6 py-16 md:py-24">
+      <slot />
+    </main>
+    <footer class="mt-12 border-t border-border">
+      <div
+        class="mx-auto flex w-full max-w-4xl flex-col gap-4 px-6 py-10 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between"
+      >
+        <p>&copy; {new Date().getFullYear()} {NAME}</p>
+        <SocialLinks />
+      </div>
+    </footer>
+  </body>
+</html>
