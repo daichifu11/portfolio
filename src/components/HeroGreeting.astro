@@ -1,0 +1,49 @@
+---
+// 挨拶 — 「こんにちは」に、hover / タップ / 初回表示で手を振る👋を添えるだけ。
+// prefers-reduced-motion 時は手を振らない。
+---
+
+<h1
+  data-hero-greeting
+  class="text-4xl font-semibold leading-[1.15] tracking-tight sm:text-5xl"
+>
+  こんにちは<span data-wave class="inline-block">👋</span>
+</h1>
+
+<style>
+  [data-wave] {
+    transform-origin: 72% 78%;
+  }
+  [data-wave]:hover,
+  [data-wave].waving {
+    animation: hero-wave 0.9s ease-in-out;
+  }
+  @keyframes hero-wave {
+    0%, 100% { transform: rotate(0deg); }
+    15% { transform: rotate(18deg); }
+    35% { transform: rotate(-9deg); }
+    55% { transform: rotate(13deg); }
+    75% { transform: rotate(-5deg); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    [data-wave] {
+      animation: none !important;
+    }
+  }
+</style>
+
+<script>
+  const h1 = document.querySelector<HTMLElement>("[data-hero-greeting]");
+  const wave = document.querySelector<HTMLElement>("[data-wave]");
+
+  if (h1 && wave && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    wave.addEventListener("animationend", () => wave.classList.remove("waving"));
+    const doWave = () => {
+      wave.classList.remove("waving");
+      void wave.offsetWidth; // アニメーションを確実に再始動させる
+      wave.classList.add("waving");
+    };
+    h1.addEventListener("click", doWave); // タップでも振れるように
+    setTimeout(doWave, 700);              // 初訪の挨拶
+  }
+</script>

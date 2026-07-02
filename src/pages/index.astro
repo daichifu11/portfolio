@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import Section from "@/components/Section.astro";
+import HeroGreeting from "@/components/HeroGreeting.astro";
 import ProjectList from "@/components/ProjectList.astro";
 import ArticleList from "@/components/ArticleList.astro";
 import SocialLinks from "@/components/SocialLinks.astro";
@@ -16,9 +17,7 @@ const latestArticles = (await getArticles()).slice(0, 3);
   <div class="space-y-14 md:space-y-20">
     <Section divider={false} class="md:pt-2">
       <div class="max-w-2xl space-y-6">
-        <h1 class="text-4xl font-semibold leading-[1.15] tracking-tight sm:text-5xl">
-          Hello👋
-        </h1>
+        <HeroGreeting />
         <p class="text-lg leading-relaxed text-muted-foreground">
           ソフトウェアエンジニアの {NAME} です。ものづくりが好きです。
         </p>
